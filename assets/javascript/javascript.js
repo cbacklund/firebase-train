@@ -1,4 +1,4 @@
-<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+$(document).ready(function(){
   // Initialize Firebase
   var config = {
     apiKey: "AIzaSyCXfDWHCanDsyVXCPJRnMkaXfJr1YnChxM",
@@ -10,17 +10,12 @@
   };
   firebase.initializeApp(config);
 
-//Variable
+//Variable setup
 var database = firebase.database();
 var trainName = "";
 var trainDestination = "";
 var trainTime = "";
 var trainFrequency = "";
-//var employeeMonthsWorked = "";
-//var employeeTotalBilled = "";
-//var employeeStartDateUniform = "";
-//var dateFormat = "YYYY-MM-DD";
-//var convertedDate = moment(employeeStartDate, dateFormat);
 
 $("#addEmployee").on("click", function (event) {
 
@@ -28,15 +23,23 @@ $("#addEmployee").on("click", function (event) {
 
     trainName = $("#name-input").val().trim();
     trainDestination = $("#destination-input").val().trim();
-    trainTime = moment($("#time-input").val().trim(), "HH:mm").format("X");
+    trainTime = moment($("#time-input").val().trim(), "HH:mm").subtract(1, "days");
     trainFrequency = $("#frequency-input").val().trim();
+
+    var currentTime = moment();
+    diffTime = moment().diff(moment(trainTime), "minutes");
+    timeRemainder = diffTime % trainFrequency;
+    minutesUntilTrain = trainFrequency - timeRemainder;
+    nextTrainTime = moment().add(minutesUntilTrain, "minutes");
+    // Formatting it in HH:mm
+    nextTrainTimeFormatted = moment(nextTrainTime).format("HH:mm");
 
     database.ref().push({
         name: trainName,
         dest: trainDestination,
         time: trainTime,
-        frequency: trainFrequency
-        //        dateAdded: firebase.database.ServerValue.TIMESTAMP
+        frequency: trainFrequency,
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
 
 });
@@ -49,25 +52,26 @@ database.ref().on("child_added", function (childSnapshot, prevChildKey) {
     console.log(childSnapshot.val().frequency);
 
 
-    var employeeStartDateUniform = moment.unix(childSnapshot.val().startDate).format("MM/DD/YY");
+    // var employeeStartDateUniform = moment.unix(childSnapshot.val().startDate).format("MM/DD/YY");
 
-    var momentNow = moment().format(X);
-    console.log(momentNow);
+    // var momentNow = moment().format(X);
+    // console.log("momentNow" + momentNow);
 
-    var employeeMonthsWorked = moment().diff(moment.unix(childSnapshot.val().startDate, "X"), "months");
-    console.log(employeeMonthsWorked);
+    // var employeeMonthsWorked = moment().diff(moment.unix(childSnapshot.val().startDate, "X"), "months");
+    // console.log(employeeMonthsWorked);
 
-    var employeeTotalBilled = employeeMonthsWorked * childSnapshot.val().startRate;
-    console.log(employeeTotalBilled);
+    // var employeeTotalBilled = employeeMonthsWorked * childSnapshot.val().startRate;
+    // console.log(employeeTotalBilled);
+
+    var nextArrival = 10;
+    var minutesAway = 5;
 
     $("#trainTimes").append("<tr>" +
         "<td>" + childSnapshot.val().name + "</td>" +
         "<td>" + childSnapshot.val().dest + "</td>" +
         "<td>" + childSnapshot.val().frequency + "</td>" +
-        "<td>" + employeeStartDateUniform + "</td>" + // next arrival goes here - 
-        "<td>" + employeeMonthsWorked + "</td>" + // minutes away goes here 
-        "<td>" + childSnapshot.val().startRate + "</td>" +
-        "<td>" + employeeTotalBilled + "</td>" +
+        "<td>" + nextArrival + "</td>" + // next arrival goes here - 
+        "<td>" + minutesAway + "</td>" + // minutes away goes here 
         "</tr>");
 
     //console.log(moment(convertedDate).diff(moment(), "months"));
@@ -85,3 +89,5 @@ database.ref().on("child_added", function (childSnapshot, prevChildKey) {
 //    $("#tableEmployeStartDateR").text(snapshot.val().startDate);
 //    $("#tableEmployeStartRateR").text(snapshot.val().startRate);
 //});
+
+}); // document ready close out

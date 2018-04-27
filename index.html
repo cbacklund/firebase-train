@@ -11,78 +11,72 @@
         crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
-    <script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
-    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+   
 </head>
 
 <body>
 
     <header>
-        <div class="jumbotron">
-            <h2>Anytime is Train Time</h2>
-            <hr class="my-2">
-            <h6>Choo Choo Chee Choo Choo Chee</h6>
+        <div class="container">
+            <div class="jumbotron text-center">
+                <h2>Anytime is Train Time (Quad City DJ's)</h2>
+                <h5>Choo Choo Chee Choo Choo Chee</h5>
+            </div>
         </div>
     </header>
 
     <!-- Table For Data  -->
-    <div class="card border-primary mb-3">
-        <div class="card-header bg-primary text-light">Current Train Schedule</div>
-        <div class="card-body">
-            <div class="container">
-                <div class="row">
-                    <div class="col">
-                        <table class="table table-hover" id="trainTimes">
-                            <thead>
-                                <tr>
-                                    <th scope="col" id="tableEmployeNameH">Train Name</th> <!-- employee name-->
-                                    <th scope="col" id="tableEmployeRoleH">Destination</th> <!-- employee role-->
-                                    <th scope="col" id="tableEmployeStartDateH">Frequency (min)</th> <!-- employee start date-->
-                                    <th scope="col" id="tableEmployeMonthWorkedH">Next Arrival</th> <!-- emp month worked-->
-                                    <th scope="col" id="tableEmployeStartRateH">Minutes Away</th> <!-- emp monthly rate-->
+    <div class="container">
+        <div class="card">
+            <div class="card-header bg-primary text-light">Current Train Schedule</div>
+            <div class="card-body">
+                <table class="table table-hover" id="trainTimes">
+                    <thead>
+                        <tr>
+                            <th scope="col" id="tTrain">Train Name</th> <!-- employee name-->
+                            <th scope="col" id="tDestination">Destination</th> <!-- employee role-->
+                            <th scope="col" id="tFrequency">Frequency (min)</th> <!-- employee start date-->
+                            <th scope="col" id="tNextArrival">Next Arrival</th> <!-- emp month worked-->
+                            <th scope="col" id="tMinutesAway">Minutes Away</th> <!-- emp monthly rate-->
                                    <!-- <th scope="col" id="tableEmployeTotalBilledH">Total Billed ($)</th> emp total billed-->
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
-      </div>
-      <div class="container"></div>
+    </div>
+
+    <div class="container mt-4">
         <div class="card border-primary mb-3">
             <div class="card-header bg-primary text-light">Add Train</div>
                 <div class="card-body">
-                     <div class="row">
-                        <div class="col">
-                            <form role="form">
-                                <div class="form-group row">
-                                    <label for="name-input">Train Name</label>
-                                    <input class="form-control" id="name-input" type="text"> <!-- employee name input-->
-                                </div>
-                                <div class="form-group row">
-                                    <label for="destination-input">Destination</label>
-                                    <input class="form-control" id="destination-input" type="text"> <!-- role input-->
-                                </div>
-                                <div class="form-group row">
-                                    <label for="time-input">First Train Time (HH:mm - military time)</label>
-                                    <input class="form-control" id="time-input" type="text"> <!-- start date input-->
-                                </div>
-                                <div class="form-group row">
-                                    <label for="frequency-input">Frequency (min)</label>
-                                    <input class="form-control" id="frequency-input" type="text"> <!-- rate input-->
-                                </div>
-                                <button class="btn btn-primary" id="addTrain" type="submit">Submit</button>
-                            </form>
+                    <form role="form">
+                        <div class="form-group row">
+                            <label for="name-input">Train Name</label>
+                            <input class="form-control" id="name-input" type="text"> <!-- employee name input-->
                         </div>
-                    </div>
+                        <div class="form-group row">
+                            <label for="destination-input">Destination</label>
+                            <input class="form-control" id="destination-input" type="text"> <!-- role input-->
+                        </div>
+                        <div class="form-group row">
+                            <label for="time-input">First Train Time (HH:mm - military time)</label>
+                            <input class="form-control" id="time-input" type="text"> <!-- start date input-->
+                        </div>
+                        <div class="form-group row">
+                            <label for="frequency-input">Frequency (min)</label>
+                            <input class="form-control" id="frequency-input" type="text"> <!-- rate input-->
+                        </div>
+                        <button class="btn btn-primary" id="addTrain" type="submit">Submit</button>
+                    </form>
                 </div>
-            </div>
-          </div>
+         </div>
     </div>
 
 </body>
-
+<script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 <script src="assets/javascript/javascript.js"></script>
 
 </html>
