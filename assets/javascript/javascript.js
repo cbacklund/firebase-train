@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
   // Initialize Firebase
   var config = {
     apiKey: "AIzaSyCXfDWHCanDsyVXCPJRnMkaXfJr1YnChxM",
@@ -16,40 +17,55 @@ var trainName = "";
 var trainDestination = "";
 var trainTime = "";
 var trainFrequency = "";
+var trainTimeConverted = "";
+var diffTime = "";
+var timeRemainder = "";
+var trainMinutesAway = "";
+var nextTrainTime = ""; 
+var nextTrainTimeFormatted = "";
+var currentTime = "";
 
-$("#addEmployee").on("click", function (event) {
-
+$("#addTrain").on("click", function (event) {
     event.preventDefault();
 
     trainName = $("#name-input").val().trim();
     trainDestination = $("#destination-input").val().trim();
-    trainTime = moment($("#time-input").val().trim(), "HH:mm").subtract(1, "days");
+    trainTime = $("#time-input").val().trim();
     trainFrequency = $("#frequency-input").val().trim();
 
-    var currentTime = moment();
-    diffTime = moment().diff(moment(trainTime), "minutes");
+    // subtracting 1 day off of the current time to make sure its correct 
+    trainTimeConverted = moment(trainTime, "HH:mm").subtract(1, "days");
+    // my favorite function. the easy one. gets the current time. 
+    currentTime = moment();
+    // subtracting the current time by the converted time and storing that
+    diffTime = moment().diff(moment(trainTimeConverted), "minutes");
+    // remainder of the difference in time per the frequency of the train
     timeRemainder = diffTime % trainFrequency;
-    minutesUntilTrain = trainFrequency - timeRemainder;
-    nextTrainTime = moment().add(minutesUntilTrain, "minutes");
+    // figuring out how much time is left compared to now until the next train arrives
+    trainMinutesAway = trainFrequency - timeRemainder;
+    // need to add those minutes from the current time so it shows the current minutes away
+    nextTrainTime = moment().add(trainMinutesAway, "minutes");
     // Formatting it in HH:mm
     nextTrainTimeFormatted = moment(nextTrainTime).format("HH:mm");
 
     database.ref().push({
-        name: trainName,
-        dest: trainDestination,
-        time: trainTime,
-        frequency: trainFrequency,
-        dateAdded: firebase.database.ServerValue.TIMESTAMP
+        trainName: trainName,
+        trainDestination: trainDestination,
+        trainTime: trainTime,
+        trainFrequency: trainFrequency,
+        nextTrainTimeFormatted: nextTrainTimeFormatted,
+        trainMinutesAway: trainMinutesAway
+        // dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
 
-});
+}); // closes the on-click function
 
-database.ref().on("child_added", function (childSnapshot, prevChildKey) {
+database.ref().on("child_added", function (childSnapshot) {
 
-    console.log(childSnapshot.val().name);
-    console.log(childSnapshot.val().dest);
-    console.log(childSnapshot.val().time);
-    console.log(childSnapshot.val().frequency);
+    console.log(childSnapshot.val().trainName);
+    console.log(childSnapshot.val().trainDestination);
+    console.log(childSnapshot.val().trainTime);
+    console.log(childSnapshot.val().trainFrequency);
 
 
     // var employeeStartDateUniform = moment.unix(childSnapshot.val().startDate).format("MM/DD/YY");
@@ -63,31 +79,17 @@ database.ref().on("child_added", function (childSnapshot, prevChildKey) {
     // var employeeTotalBilled = employeeMonthsWorked * childSnapshot.val().startRate;
     // console.log(employeeTotalBilled);
 
-    var nextArrival = 10;
-    var minutesAway = 5;
-
     $("#trainTimes").append("<tr>" +
-        "<td>" + childSnapshot.val().name + "</td>" +
-        "<td>" + childSnapshot.val().dest + "</td>" +
-        "<td>" + childSnapshot.val().frequency + "</td>" +
-        "<td>" + nextArrival + "</td>" + // next arrival goes here - 
-        "<td>" + minutesAway + "</td>" + // minutes away goes here 
+        "<td>" + childSnapshot.val().trainName + "</td>" +
+        "<td>" + childSnapshot.val().trainDestination + "</td>" +
+        "<td>" + childSnapshot.val().trainFrequency + "</td>" +
+        "<td>" + childSnapshot.val().nextTrainTimeFormatted + "</td>" + // next arrival goes here - 
+        "<td>" + childSnapshot.val().trainMinutesAway + "</td>" + // minutes away goes here 
         "</tr>");
 
-    //console.log(moment(convertedDate).diff(moment(), "months"));
-    //var empStartPretty = moment.unix(startDate).format("MM/DD/YYY");
-
-    //var empMonths = moment()
 
 }, function (errorObject) {
     console.log("Errors handled: " + errorObject.code);
 });
-
-//database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function (snapshot) {
-//    $("#tableEmployeMonthWorkedR").text(snapshot.val().name);
-//    $("#tableEmployeRoleR").text(snapshot.val().role);
-//    $("#tableEmployeStartDateR").text(snapshot.val().startDate);
-//    $("#tableEmployeStartRateR").text(snapshot.val().startRate);
-//});
 
 }); // document ready close out
